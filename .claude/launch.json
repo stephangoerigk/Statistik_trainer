@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Statistik Trainer (Shiny)",
+      "runtimeExecutable": "Rscript",
+      "runtimeArgs": ["-e", "shiny::runApp('app.R', port=3838, host='0.0.0.0')"],
+      "port": 3838
+    }
+  ]
+}

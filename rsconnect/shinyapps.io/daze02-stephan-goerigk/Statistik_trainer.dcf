@@ -1,0 +1,11 @@
+name: Statistik_trainer
+title: Statistik_trainer
+username:
+account: daze02-stephan-goerigk
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6716233
+bundleId: 9945573
+url: https://daze02-stephan-goerigk.shinyapps.io/Statistik_trainer/
+asMultiple: FALSE
+asStatic: FALSE
