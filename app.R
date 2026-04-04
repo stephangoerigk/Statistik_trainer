@@ -17,7 +17,7 @@ aufgabe <- data.frame(
   task = c("xtable", "modalwert", "mean", "median", "spannweite", "var", "sd", "iqr", "boxplot",
            "binom", "bernoulli", "scale", "zdist",
            "confint_mean_with_var", "confint_mean_no_var",
-           "cov", "cor_pearson", "cor_spearman", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2", "t.test1", "t.test1_2", "t.test", "t.test2",
+           "cov", "cor_pearson", "cor_spearman", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2", "levene", "t.test1", "t.test1_2", "t.test", "t.test2",
            "abh_t.test", "abh_t.test2", "oneway_anova", "rm_anova",
            "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld",
            "alpha_kumulierung", "bonferroni", "fdr", "cohend", "eta2", "omega2", "cramersv", "phi", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2"),
@@ -33,6 +33,7 @@ aufgabe <- data.frame(
             "Pearson-Korrelation (Signifikanztest, einseitig)",
             "Spearman-Korrelation (Signifikanztest, zweiseitig)",
             "Spearman-Korrelation (Signifikanztest, einseitig)",
+            "Levene-Test",
             "Ein-Stichproben t-Test (zweiseitig)", "Ein-Stichproben t-Test (einseitig)",
             "Unabh. t-Test (zweiseitig)",
             "Unabh. t-Test (einseitig)", "Abh. t-Test (zweiseitig)",
@@ -78,6 +79,7 @@ aufgabe <- data.frame(
     "Aufgabe: Gegeben ist der folgende Pearson-Korrelationskoeffizient sowie die zugeh\u00f6rigen Daten. Testen Sie einseitig, ob der Korrelationskoeffizient \\(r\\) signifikant gr\u00f6\u00dfer als 0 ist (\\(\\alpha = .05\\)).",
     "Aufgabe: Gegeben ist der folgende Spearman-Korrelationskoeffizient sowie die zugeh\u00f6rigen Daten. Testen Sie zweiseitig, ob der Korrelationskoeffizient \\(r_s\\) signifikant von 0 verschieden ist (\\(\\alpha = .05\\)).",
     "Aufgabe: Gegeben ist der folgende Spearman-Korrelationskoeffizient sowie die zugeh\u00f6rigen Daten. Testen Sie einseitig, ob der Korrelationskoeffizient \\(r_s\\) signifikant gr\u00f6\u00dfer als 0 ist (\\(\\alpha = .05\\)).",
+    "Aufgabe: Testen Sie mit dem Levene-Test, ob sich die Varianzen der Gruppen A und B signifikant unterscheiden (\\(\\alpha = .05\\)).",
     "",
     "",
     "Aufgabe: Berechnen Sie einen zweiseitigen unabh\u00e4ngigen t-Test f\u00fcr den Mittelwertsunterschied zwischen den Gruppen A und B (Varianzhomogenit\u00e4t darf angenommen werden, \\(\\alpha = .05\\)).",
@@ -127,6 +129,7 @@ aufgabe <- data.frame(
     "Formel: $$ t = \\frac{r \\cdot \\sqrt{N-2}}{\\sqrt{1-r^2}}; \\quad df = N-2 $$",
     "Formel: $$ t = \\frac{r_s \\cdot \\sqrt{N-2}}{\\sqrt{1-r_s^2}}; \\quad df = N-2 $$",
     "Formel: $$ t = \\frac{r_s \\cdot \\sqrt{N-2}}{\\sqrt{1-r_s^2}}; \\quad df = N-2 $$",
+    "Formel: $$ F = \\frac{s^2_{max}}{s^2_{min}}, \\quad df_1 = n_1 - 1, \\quad df_2 = n_2 - 1 $$",
     "Formel: $$ t = \\frac{\\bar{x} - \\mu_0}{\\frac{s}{\\sqrt{n}}}; \\quad df = n-1 $$",
     "Formel: $$ t = \\frac{\\bar{x} - \\mu_0}{\\frac{s}{\\sqrt{n}}}; \\quad df = n-1 $$",
     "Formel: $$ t = \\frac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{\\frac{(n_1 - 1) \\cdot \\sigma_1^2 + (n_2 - 1) \\cdot \\sigma_2^2}{(n_1 - 1) + (n_2 - 1)} \\cdot \\left(\\frac{1}{n_1} + \\frac{1}{n_2} \\right)}}; df = n_1 + n_2 - 2 $$",
@@ -493,6 +496,16 @@ server <- function(input, output, session) {
     V_target      <- round(runif(1, 0.05, 0.75), 2)
     chi2_cramersv <- round(V_target^2 * N_cramersv * (k_cramersv - 1), 2)
 
+    # Levene-Test: zwei Gruppen mit unabhaengigen SDs
+    sd_lev1 <- max(1, round(mean_val * sample(sds_vals[1:10],  1)))
+    sd_lev2 <- max(1, round(mean_val * sample(sds_vals[11:20], 1)))
+    x_lev1  <- round(rnorm(n/2, mean_val, sd_lev1))
+    x_lev2  <- round(rnorm(n/2, mean_val, sd_lev2))
+    df_lev  <- as.data.frame(t(rbind(
+      data.frame(ID = as.character(1:(n/2)), X = x_lev1, Gruppe = "A"),
+      data.frame(ID = as.character(1:(n/2)), X = x_lev2, Gruppe = "B")
+    )))
+
     # Ein-Stichproben t-Test Referenzwert (nah am Stichprobenmittelwert)
     mu0    <- round(mean(x)) + sample(-3:3, 1)
 
@@ -519,6 +532,7 @@ server <- function(input, output, session) {
       N_phi = N_phi, chi2_phi = chi2_phi,
       k_cramersv = k_cramersv, N_cramersv = N_cramersv, chi2_cramersv = chi2_cramersv,
       df_rm = df_rm, df_rm_t = df_rm_t, n_rm = n_rm,
+      x_lev1 = x_lev1, x_lev2 = x_lev2, df_lev = df_lev,
       mu0 = mu0, x_pred = x_pred
     )
   })
@@ -607,6 +621,7 @@ server <- function(input, output, session) {
       "t.test1_2" = {
         paste0("Hypothesen: $$H_0 : \\mu \\leq ", d$mu0, "$$\n$$H_1 : \\mu > ", d$mu0, "$$")
       },
+      "levene"       = paste("Hypothesen: $$H_0 : \\sigma^2_A = \\sigma^2_B$$", "\n", "$$H_1 : \\sigma^2_A \\neq \\sigma^2_B$$"),
       "t.test"       = paste("Hypothesen: $$H_0", ":", " \\mu_A - \\mu_B = 0$$", "\n", "$$H_1", ":", " \\mu_A - \\mu_B \\neq 0$$"),
       "t.test2"      = paste("Hypothesen: $$H_0", ":", " \\mu_A - \\mu_B \\leq 0$$", "\n", "$$H_1", ":", " \\mu_A - \\mu_B > 0$$"),
       "abh_t.test"   = paste("Hypothesen: $$H_0", ":", " \\mu_d = 0$$", "\n", "$$H_1", ":", " \\mu_d \\neq 0$$"),
@@ -682,6 +697,7 @@ server <- function(input, output, session) {
     if (input$drop == "xtable")                                              return(d$df_gr_d)
     if (input$drop %in% c("cov", "cor_pearson", "cor_sig", "cor_sig2", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2")) return(d$df_2)
     if (input$drop %in% c("cor_spearman", "cor_sig_s", "cor_sig_s2"))       return(d$df_2rank)
+    if (input$drop == "levene")                                              return(d$df_lev)
     if (input$drop %in% c("t.test", "t.test2", "cohend"))                   return(d$df_gr)
     if (input$drop == "oneway_anova")                                        return(d$df_3gr)
     if (input$drop == "rm_anova")                                           return(d$df_rm_t)
@@ -752,7 +768,7 @@ server <- function(input, output, session) {
       }
       return(df_tbl)
     }
-    if (input$drop %in% c("oneway_anova", "rm_anova")) {
+    if (input$drop %in% c("oneway_anova", "rm_anova", "levene")) {
       f_quantiles <- c(0.75, 0.90, 0.95, 0.99)
       flaeche_col <- "Fl\u00e4che"
       d_tbl <- data.frame(df2 = rep(1:12, each = 4), Flaeche = rep(f_quantiles, 12))
@@ -863,6 +879,21 @@ server <- function(input, output, session) {
       "bernoulli" = {
         pb <- d$p_bernoulli; kb <- d$k_bernoulli
         paste0("L\u00f6sung: $$ P(X = ", kb, ") = ", round(pb^kb * (1 - pb)^(1 - kb), 4), " $$")
+      },
+      "levene" = {
+        v1 <- round(var(d$x_lev1), 3); v2 <- round(var(d$x_lev2), 3)
+        n1 <- length(d$x_lev1);        n2 <- length(d$x_lev2)
+        f_emp  <- round(max(v1, v2) / min(v1, v2), 3)
+        df1    <- ifelse(v1 >= v2, n1 - 1, n2 - 1)
+        df2    <- ifelse(v1 >= v2, n2 - 1, n1 - 1)
+        f_crit <- round(qf(0.975, df1, df2), 3)
+        decision <- if (f_emp > f_crit)
+          paste0("Da \\(F_{emp} = ", f_emp, " > F_{krit} = ", f_crit, "\\), wird die \\(H_0\\) verworfen. ",
+                 "Die Varianzen unterscheiden sich signifikant.")
+        else
+          paste0("Da \\(F_{emp} = ", f_emp, " \\leq F_{krit} = ", f_crit, "\\), wird die \\(H_0\\) beibehalten. ",
+                 "Die Varianzen unterscheiden sich nicht signifikant.")
+        paste0("L\u00f6sung: $$ F_{emp} = ", f_emp, ", \\quad F_{krit} = ", f_crit, " $$<br>", decision)
       },
       "cor_pearson" = {
         r_val <- round(cor(x, y), 2)
@@ -1355,6 +1386,29 @@ server <- function(input, output, session) {
         "\n",
         "$$ s_{xy}=\\frac{\\displaystyle ", round(sum((x - mean(x)) * (y - mean(y))), 2), "}{", n - 1, "} $$"
       ),
+
+      "levene" = {
+        xl1 <- d$x_lev1; xl2 <- d$x_lev2
+        n1  <- length(xl1); n2 <- length(xl2)
+        m1  <- round(mean(xl1), 2); m2 <- round(mean(xl2), 2)
+        v1  <- round(var(xl1), 3);  v2 <- round(var(xl2), 3)
+        f_emp  <- round(max(v1, v2) / min(v1, v2), 3)
+        df1    <- ifelse(v1 >= v2, n1 - 1, n2 - 1)
+        df2    <- ifelse(v1 >= v2, n2 - 1, n1 - 1)
+        f_crit <- round(qf(0.975, df1, df2), 3)
+        grp_max <- if (v1 >= v2) "A" else "B"
+        grp_min <- if (v1 >= v2) "B" else "A"
+        paste0("L\u00f6sungsweg: ",
+               "$$ s^2_A = \\dfrac{\\displaystyle",
+               paste(paste0("(", xl1, "-", m1, ")^2"), collapse = "+"),
+               "}{", n1, "-1} = ", v1, " $$",
+               "$$ s^2_B = \\dfrac{\\displaystyle",
+               paste(paste0("(", xl2, "-", m2, ")^2"), collapse = "+"),
+               "}{", n2, "-1} = ", v2, " $$",
+               "$$ F_{emp} = \\frac{s^2_{", grp_max, "}}{s^2_{", grp_min, "}} = \\frac{", max(v1,v2), "}{", min(v1,v2), "} = ", f_emp, " $$",
+               "$$ df_1 = n_1 - 1 = ", df1, ", \\quad df_2 = n_2 - 1 = ", df2, " $$",
+               "$$ F_{krit(df_1=", df1, ", \\, df_2=", df2, ", \\, \\alpha=.05)} = ", f_crit, " $$")
+      },
 
       "cor_pearson" = paste(
         "L\u00f6sungsweg: $$ s_{xy}=\\frac{\\displaystyle \\sum_{i=1}^{n}(x_{i}-\\bar{x})\\cdot(y_{i}-\\bar{y})}{n-1} $$",
@@ -1883,6 +1937,51 @@ server <- function(input, output, session) {
                               shape = 1, size = 3, colour = "black")
         }
         p
+      },
+
+      "levene" = {
+        xl1 <- d$x_lev1; xl2 <- d$x_lev2
+        n1  <- length(xl1); n2 <- length(xl2)
+        v1  <- round(var(xl1), 3); v2 <- round(var(xl2), 3)
+        f_emp  <- round(max(v1, v2) / min(v1, v2), 3)
+        df1    <- ifelse(v1 >= v2, n1 - 1, n2 - 1)
+        df2    <- ifelse(v1 >= v2, n2 - 1, n1 - 1)
+        f_crit <- round(qf(0.975, df1, df2), 3)
+        x_lim  <- max(8, f_emp + 2)
+
+        var_df <- data.frame(Gruppe = c("A", "B"), Varianz = c(v1, v2))
+        bar_plot <- ggplot(var_df, aes(x = Gruppe, y = Varianz, fill = Gruppe)) +
+          geom_bar(stat = "identity", colour = "black") +
+          geom_text(aes(label = paste0("s\u00b2 = ", Varianz)), vjust = -0.4, size = 5) +
+          scale_fill_manual(values = c("A" = "white", "B" = "black")) +
+          scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+          labs(x = "Gruppe", y = expression(s^2)) +
+          theme_classic(base_size = 14) +
+          theme(legend.position = "none", text = element_text(color = "black"))
+
+        label_hjust <- if (f_emp < x_lim * 0.6) -0.15 else 1.15
+        f_plot <- ggplot(data.frame(f = c(0, x_lim)), aes(x = f)) +
+          stat_function(fun = df, args = list(df1 = df1, df2 = df2), geom = "area",
+                        xlim = c(f_crit, x_lim), fill = "#e8e8e8") +
+          stat_function(fun = df, args = list(df1 = df1, df2 = df2), colour = "black") +
+          geom_segment(aes(x = f_emp, xend = f_emp, y = 0,
+                           yend = df(f_emp, df1, df2)),
+                       linetype = "dashed", color = "black") +
+          annotate("text", x = f_emp + 0.3 * sign(f_emp - x_lim * 0.5 + 0.001),
+                   y = df(f_crit, df1, df2) * 1.8,
+                   label = paste0("F[emp]~'='~", f_emp),
+                   parse = TRUE, hjust = label_hjust,
+                   size = 5, color = "black", fontface = "bold") +
+          coord_cartesian(clip = "off") +
+          scale_x_continuous(breaks = c(0, f_crit)) +
+          scale_y_continuous(breaks = NULL) +
+          labs(x = "F", y = "") +
+          ggtitle(paste0("F-Verteilung (df1 = ", df1, ", df2 = ", df2, "):")) +
+          theme_classic(base_size = 14) +
+          theme(text = element_text(color = "black"),
+                axis.text.x = element_text(color = "black", size = 9))
+
+        cowplot::plot_grid(bar_plot, f_plot, ncol = 2)
       },
 
       "cov" = ,
@@ -2570,7 +2669,7 @@ server <- function(input, output, session) {
   output$formel        <- renderUI({ withMathJax(helpText(HTML(sub("^Formel:", "<strong>Formel:</strong>", formel_reactive())))) })
   output$loesungsweg   <- renderUI({ withMathJax(helpText(HTML(sub("^L\u00f6sungs?weg:", "<strong>L\u00f6sungsweg:</strong>", loesungsweg_reactive())))) })
   output$loesung       <- renderUI({ withMathJax(helpText(HTML(sub("^L\u00f6sung:", "<strong>L\u00f6sung:</strong>", loesung_reactive())))) })
-  plots_with_label <- c("modalwert", "mean", "sd", "median", "spannweite", "boxplot", "cov", "cor_pearson", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2",
+  plots_with_label <- c("modalwert", "mean", "sd", "median", "spannweite", "boxplot", "cov", "cor_pearson", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2", "levene", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2",
                         "t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "cohend", "oneway_anova", "rm_anova",
                         "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld", "zdist", "scale")
   output$plot_label <- renderUI({
@@ -2584,7 +2683,7 @@ server <- function(input, output, session) {
 
   output$plot_container <- renderUI({
     if (input$drop %in% c("t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "oneway_anova", "rm_anova", "scale",
-                          "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld", "lm_sig", "lm_sig2", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2")) {
+                          "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld", "lm_sig", "lm_sig2", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2", "levene")) {
       plotOutput("plot", width = "580px", height = "280px")
     } else {
       plotOutput("plot", width = "300px", height = "300px")
