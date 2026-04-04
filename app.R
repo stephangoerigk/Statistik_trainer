@@ -14,25 +14,30 @@ my_green <- "#00C1BF"
 # Task definitions ---------------------------------------------------------
 
 aufgabe <- data.frame(
-  task = c("xtable", "modalwert", "mean", "median", "spannweite", "var", "sd", "iqr",
+  task = c("xtable", "modalwert", "mean", "median", "spannweite", "var", "sd", "iqr", "boxplot",
            "binom", "bernoulli", "scale", "zdist",
            "confint_mean_with_var", "confint_mean_no_var",
-           "cov", "cor_pearson", "cor_spearman", "t.test1", "t.test1_2", "t.test", "t.test2",
-           "abh_t.test", "abh_t.test2", "oneway_anova",
+           "cov", "cor_pearson", "cor_spearman", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2", "t.test1", "t.test1_2", "t.test", "t.test2",
+           "abh_t.test", "abh_t.test2", "oneway_anova", "rm_anova",
            "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld",
            "alpha_kumulierung", "bonferroni", "fdr", "cohend", "eta2", "omega2", "cramersv", "phi", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2"),
   label = c("Kreuztabelle", "Modalwert", "Mittelwert", "Median", "Spannweite", "Varianz",
-            "Standardabweichung", "Quartilsabstand",
+            "Standardabweichung", "Quartilsabstand", "Boxplot",
             "Binomialverteilung", "Bernoulliverteilung", "z-Transformation",
             "Standardnormalverteilung",
             "KI f\u00fcr Mittelwert, \u03c3 bekannt",
             "KI f\u00fcr Mittelwert, \u03c3 unbekannt",
             "Kovarianz", "Pearson-Korrelation",
             "Spearman-Korrelation",
+            "Pearson-Korrelation (Signifikanztest, zweiseitig)",
+            "Pearson-Korrelation (Signifikanztest, einseitig)",
+            "Spearman-Korrelation (Signifikanztest, zweiseitig)",
+            "Spearman-Korrelation (Signifikanztest, einseitig)",
             "Ein-Stichproben t-Test (zweiseitig)", "Ein-Stichproben t-Test (einseitig)",
             "Unabh. t-Test (zweiseitig)",
             "Unabh. t-Test (einseitig)", "Abh. t-Test (zweiseitig)",
             "Abh. t-Test (einseitig)", "Einfaktorielle ANOVA",
+            "ANOVA mit Messwiederholung",
             "\u03c7\u00b2-Anpassungstest (Gleichverteilung)",
             "\u03c7\u00b2-Anpassungstest (Verh\u00e4ltnis)",
             "\u03c7\u00b2-Unabh\u00e4ngigkeitstest",
@@ -59,6 +64,7 @@ aufgabe <- data.frame(
     "Aufgabe: Berechnen Sie die Varianz (\\(s^2\\)) der Variable (\\(X\\)):",
     "Aufgabe: Berechnen Sie die Standardabweichung (\\(s\\)) der Variable (\\(X\\)):",
     "Aufgabe: Berechnen Sie den Quartilsabstand (IQR) f\u00fcr die Variable (\\(X\\)):",
+    "Aufgabe: Berechnen Sie f\u00fcr die Variable (\\(X\\)) Median, unteres Quartil (\\(\\tilde{x}_{0.25}\\)), oberes Quartil (\\(\\tilde{x}_{0.75}\\)) sowie die Whisker-Enden und stellen Sie die Verteilung als Boxplot dar.",
     "",
     "",
     "Aufgabe: Standardisieren Sie die Variable (\\(X\\)):",
@@ -68,6 +74,10 @@ aufgabe <- data.frame(
     "Aufgabe: Berechnen Sie die Kovarianz (\\(s_{xy}\\)) zwischen \\(X\\) und \\(Y\\).",
     "Aufgabe: Berechnen Sie die Pearson-Korrelation (\\(r\\)) zwischen \\(X\\) und \\(Y\\).",
     "Aufgabe: Berechnen Sie die Spearman-Korrelation (\\(r_s\\)) zwischen \\(X\\) und \\(Y\\).",
+    "Aufgabe: Gegeben ist der folgende Pearson-Korrelationskoeffizient sowie die zugeh\u00f6rigen Daten. Testen Sie zweiseitig, ob der Korrelationskoeffizient \\(r\\) signifikant von 0 verschieden ist (\\(\\alpha = .05\\)).",
+    "Aufgabe: Gegeben ist der folgende Pearson-Korrelationskoeffizient sowie die zugeh\u00f6rigen Daten. Testen Sie einseitig, ob der Korrelationskoeffizient \\(r\\) signifikant gr\u00f6\u00dfer als 0 ist (\\(\\alpha = .05\\)).",
+    "Aufgabe: Gegeben ist der folgende Spearman-Korrelationskoeffizient sowie die zugeh\u00f6rigen Daten. Testen Sie zweiseitig, ob der Korrelationskoeffizient \\(r_s\\) signifikant von 0 verschieden ist (\\(\\alpha = .05\\)).",
+    "Aufgabe: Gegeben ist der folgende Spearman-Korrelationskoeffizient sowie die zugeh\u00f6rigen Daten. Testen Sie einseitig, ob der Korrelationskoeffizient \\(r_s\\) signifikant gr\u00f6\u00dfer als 0 ist (\\(\\alpha = .05\\)).",
     "",
     "",
     "Aufgabe: Berechnen Sie einen zweiseitigen unabh\u00e4ngigen t-Test f\u00fcr den Mittelwertsunterschied zwischen den Gruppen A und B (Varianzhomogenit\u00e4t darf angenommen werden, \\(\\alpha = .05\\)).",
@@ -75,6 +85,7 @@ aufgabe <- data.frame(
     "Aufgabe: Berechnen Sie einen zweiseitigen abh\u00e4ngigen t-Test f\u00fcr den Mittelwertsunterschied zwischen den Messzeitpunkten \\(t_0\\) (Pr\u00e4) und \\(t_1\\) (Post) (\\(\\alpha = .05\\)).",
     "Aufgabe: Berechnen Sie einen einseitigen abh\u00e4ngigen t-Test f\u00fcr den Mittelwertsunterschied zwischen den Messzeitpunkten \\(t_0\\) (Pr\u00e4) und \\(t_1\\) (Post) (\\(\\alpha = .05\\)).",
     "Aufgabe: Berechnen Sie eine einfaktorielle ANOVA f\u00fcr den Mittelwertsunterschied zwischen den Gruppen A, B und C (Varianzhomogenit\u00e4t darf angenommen werden, \\(\\alpha = .05\\)).",
+    "Aufgabe: Berechnen Sie eine ANOVA mit Messwiederholung f\u00fcr den Mittelwertsunterschied zwischen den Messzeitpunkten \\(t_0\\), \\(t_1\\) und \\(t_2\\) (\\(\\alpha = .05\\)).",
     "Aufgabe: Testen Sie, ob die H\u00e4ufigkeitsverteilung der Variable X einer Gleichverteilung entspricht (\\(\\alpha = .05\\)).",
     "",
     "Aufgabe: Testen Sie, ob ein Zusammenhang zwischen den Variablen X und Y besteht (\\(\\alpha = .05\\)).",
@@ -102,6 +113,7 @@ aufgabe <- data.frame(
     "Formel: $$ s^2=\\dfrac{\\displaystyle\\sum_{i=1}^{n}(x_{i}-\\bar{x})^2}{n-1} $$",
     "Formel: $$ s=\\sqrt{\\frac{\\displaystyle\\sum_{i=1}^{n}(x_{i}-\\bar{x})^2}{n-1}} $$",
     "Formel: $$ \\tilde{x}_{\\alpha} = \\begin{cases} x_{(l)} & \\text{falls } n \\cdot \\alpha \\text{ keine ganze Zahl ist, } l = \\text{die auf } n \\cdot \\alpha \\text{ folgende ganze Zahl} \\\\ \\frac{x_{(l)} + x_{(l+1)}}{2} & \\text{falls } n \\cdot \\alpha \\text{ eine ganze Zahl ist, } l = n \\cdot \\alpha \\end{cases} $$",
+    "Formel: $$ \\def\\arraystretch{1.2} \\textit{Md} = \\Bigg\\{\\begin{array}{@{}c@{}}\\frac{x_{(\\frac{n}{2})}+x_{(\\frac{n}{2}+1)}}{2} \\quad \\textrm{falls }n \\textrm{ gerade}\\\\[6pt] x_{(\\frac{n+1}{2})}\\quad \\textrm{falls }n \\textrm{ ungerade}\\end{array}$$ \n $$ \\tilde{x}_{\\alpha} = \\begin{cases} x_{(l)} & \\text{falls } n \\cdot \\alpha \\text{ keine ganze Zahl ist, } l = \\text{die auf } n \\cdot \\alpha \\text{ folgende ganze Zahl} \\\\ \\frac{x_{(l)} + x_{(l+1)}}{2} & \\text{falls } n \\cdot \\alpha \\text{ eine ganze Zahl ist, } l = n \\cdot \\alpha \\end{cases} $$ \n $$ \\text{Whisker: bis zum letzten Wert innerhalb von } \\tilde{x}_{0.25/0.75} \\pm 1.5 \\cdot IQR $$",
     "Formel: $$ P(X = k) = \\binom{n}{k} \\cdot p^k \\cdot (1-p)^{n-k} = \\frac{n!}{k! \\cdot (n-k)!} \\cdot p^k \\cdot (1-p)^{n-k} $$",
     "Formel: $$ P(X = k) = p^k \\cdot (1-p)^{1-k}, \\quad k \\in \\{0, 1\\} $$",
     "Formel: $$ z_i=\\frac{x_i-\\bar{x}}{s} $$",
@@ -111,6 +123,10 @@ aufgabe <- data.frame(
     "Formel: $$ s_{xy}=\\frac{\\displaystyle \\sum_{i=1}^{n}(x_{i}-\\bar{x})\\cdot(y_{i}-\\bar{y})}{n-1} $$",
     "Formel: $$ r=\\frac{s_{xy}}{s_x\\cdot s_y} $$",
     "Formel: $$ r_s={}1-\\frac{6 \\cdot \\displaystyle \\sum_{i=1}^{n}d^2_i}{N \\cdot (N^2 - 1)} $$",
+    "Formel: $$ t = \\frac{r \\cdot \\sqrt{N-2}}{\\sqrt{1-r^2}}; \\quad df = N-2 $$",
+    "Formel: $$ t = \\frac{r \\cdot \\sqrt{N-2}}{\\sqrt{1-r^2}}; \\quad df = N-2 $$",
+    "Formel: $$ t = \\frac{r_s \\cdot \\sqrt{N-2}}{\\sqrt{1-r_s^2}}; \\quad df = N-2 $$",
+    "Formel: $$ t = \\frac{r_s \\cdot \\sqrt{N-2}}{\\sqrt{1-r_s^2}}; \\quad df = N-2 $$",
     "Formel: $$ t = \\frac{\\bar{x} - \\mu_0}{\\frac{s}{\\sqrt{n}}}; \\quad df = n-1 $$",
     "Formel: $$ t = \\frac{\\bar{x} - \\mu_0}{\\frac{s}{\\sqrt{n}}}; \\quad df = n-1 $$",
     "Formel: $$ t = \\frac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{\\frac{(n_1 - 1) \\cdot \\sigma_1^2 + (n_2 - 1) \\cdot \\sigma_2^2}{(n_1 - 1) + (n_2 - 1)} \\cdot \\left(\\frac{1}{n_1} + \\frac{1}{n_2} \\right)}}; df = n_1 + n_2 - 2 $$",
@@ -118,6 +134,7 @@ aufgabe <- data.frame(
     "Formel: $$ t=\\frac{\\bar{x}_d}{\\hat{\\sigma}_{\\bar{x}_d}} $$",
     "Formel: $$ t=\\frac{\\bar{x}_d}{\\hat{\\sigma}_{\\bar{x}_d}} $$",
     "Formel: $$ F_{(df1,df2)} = \\frac{\\sigma^2_{Sys}}{\\sigma^2_{Res}} $$ \n $$ df_1 = p-1 $$ \n $$ df_2 = p \\cdot (n-1) $$",
+    "Formel: $$ F = \\frac{\\hat{\\sigma}_A^2}{\\hat{\\sigma}_{A \\times Vpn}^2} $$ \n $$ \\hat{\\sigma}_A^2 = \\frac{n \\cdot \\sum(\\bar{A}_i - \\bar{G})^2}{p-1} $$ \n $$ \\hat{\\sigma}_{A \\times Vpn}^2 = \\frac{\\sum_i \\sum_m [x_{im}-(\\bar{A}_i+\\bar{P}_m-\\bar{G})]^2}{(p-1)(n-1)} $$",
     "Formel: $$ \\chi^2 = \\sum\\limits_{i=1}^{k} \\frac{(f_{bi} - f_{ei})^2}{f_{ei}}, \\quad df = k-1 $$",
     "Formel: $$ \\chi^2 = \\sum\\limits_{i=1}^{k} \\frac{(f_{bi} - f_{ei})^2}{f_{ei}}, \\quad df = k-1 $$",
     "Formel: $$ \\chi^2 = \\sum\\limits_{i=1}^{k}\\sum\\limits_{j=1}^{l} \\frac{(f_{bij} - f_{eij})^2}{f_{eij}}, \\quad df = (k-1) \\cdot (l-1) $$",
@@ -411,6 +428,18 @@ server <- function(input, output, session) {
       data.frame(ID = as.character(1:(n3/3)), X = x_3g3, Gruppe = "C")
     )))
 
+    # Repeated measures ANOVA (3 time points, 6 subjects)
+    n_rm    <- 6
+    base_rm <- round(rnorm(n_rm, mean_val, sd1))
+    eff_t1  <- sample(seq(-sd1, sd1, length.out = 9), 1)
+    eff_t2  <- sample(seq(-sd1, sd1, length.out = 9), 1)
+    noise   <- sd1 * 0.3
+    rm_t0   <- round(base_rm + rnorm(n_rm, 0, noise))
+    rm_t1   <- round(base_rm + eff_t1 + rnorm(n_rm, 0, noise))
+    rm_t2   <- round(base_rm + eff_t2 + rnorm(n_rm, 0, noise))
+    df_rm   <- data.frame(ID = 1:n_rm, t0 = rm_t0, t1 = rm_t1, t2 = rm_t2)
+    df_rm_t <- as.data.frame(t(df_rm))
+
     zdist_pos       <- sample(1:n, 1)
     zdist_direction <- sample(c("lower", "upper"), 1)
 
@@ -489,6 +518,7 @@ server <- function(input, output, session) {
       obs_chi2_4feld = obs_chi2_4feld,
       N_phi = N_phi, chi2_phi = chi2_phi,
       k_cramersv = k_cramersv, N_cramersv = N_cramersv, chi2_cramersv = chi2_cramersv,
+      df_rm = df_rm, df_rm_t = df_rm_t, n_rm = n_rm,
       mu0 = mu0, x_pred = x_pred
     )
   })
@@ -582,6 +612,7 @@ server <- function(input, output, session) {
       "abh_t.test"   = paste("Hypothesen: $$H_0", ":", " \\mu_d = 0$$", "\n", "$$H_1", ":", " \\mu_d \\neq 0$$"),
       "abh_t.test2"  = paste("Hypothesen: $$H_0", ":", " \\mu_d \\leq 0$$", "\n", "$$H_1", ":", " \\mu_d > 0$$"),
       "oneway_anova" = paste("Hypothesen: $$H_0", ":", " \\mu_1 = \\mu_2 = \\mu_3$$", "\n", "$$H_1", ":", " \\exists \\ i, j \\ \\text{mit} \\ \\mu_i \\neq \\mu_j$$"),
+      "rm_anova"     = paste("Hypothesen: $$H_0 : \\mu_{t_0} = \\mu_{t_1} = \\mu_{t_2}$$", "\n", "$$H_1 : \\exists \\ i, j \\ \\text{mit} \\ \\mu_i \\neq \\mu_j$$"),
       "chi2_gleich" = paste("Hypothesen: $$H_0 : \\text{Gleichverteilung}$$",
                             "\n", "$$H_1 : \\text{keine Gleichverteilung}$$"),
       "chi2_verh"   = {
@@ -620,6 +651,28 @@ server <- function(input, output, session) {
         paste0("Modell: $$ \\hat{y} = ", a_val, " + ", b_val, " \\cdot x $$\n",
                "Hypothesen: $$H_0 : b \\leq 0$$\n$$H_1 : b > 0$$")
       },
+      "cor_sig" = {
+        r_val <- round(cor(d$x, d$y), 2)
+        paste0("Gegeben: $$ r = ", r_val, ", \\quad N = ", d$n, " $$\n",
+               "Hypothesen: $$H_0 : \\rho = 0$$\n$$H_1 : \\rho \\neq 0$$")
+      },
+      "cor_sig2" = {
+        r_val <- round(cor(d$x, d$y), 2)
+        paste0("Gegeben: $$ r = ", r_val, ", \\quad N = ", d$n, " $$\n",
+               "Hypothesen: $$H_0 : \\rho \\leq 0$$\n$$H_1 : \\rho > 0$$")
+      },
+      "cor_sig_s" = {
+        x_rank <- d$x_rank; y_rank <- d$y_rank; n_val <- d$n
+        rs_val <- round(1 - 6 * sum((x_rank - y_rank)^2) / (n_val * (n_val^2 - 1)), 2)
+        paste0("Gegeben: $$ r_s = ", rs_val, ", \\quad N = ", d$n, " $$\n",
+               "Hypothesen: $$H_0 : \\rho_s = 0$$\n$$H_1 : \\rho_s \\neq 0$$")
+      },
+      "cor_sig_s2" = {
+        x_rank <- d$x_rank; y_rank <- d$y_rank; n_val <- d$n
+        rs_val <- round(1 - 6 * sum((x_rank - y_rank)^2) / (n_val * (n_val^2 - 1)), 2)
+        paste0("Gegeben: $$ r_s = ", rs_val, ", \\quad N = ", d$n, " $$\n",
+               "Hypothesen: $$H_0 : \\rho_s \\leq 0$$\n$$H_1 : \\rho_s > 0$$")
+      },
       NULL
     )
   })
@@ -627,11 +680,12 @@ server <- function(input, output, session) {
   table_reactive <- eventReactive(input$go, {
     d <- sim_data()
     if (input$drop == "xtable")                                              return(d$df_gr_d)
-    if (input$drop %in% c("cov", "cor_pearson", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2")) return(d$df_2)
-    if (input$drop == "cor_spearman")                                        return(d$df_2rank)
+    if (input$drop %in% c("cov", "cor_pearson", "cor_sig", "cor_sig2", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2")) return(d$df_2)
+    if (input$drop %in% c("cor_spearman", "cor_sig_s", "cor_sig_s2"))       return(d$df_2rank)
     if (input$drop %in% c("t.test", "t.test2", "cohend"))                   return(d$df_gr)
     if (input$drop == "oneway_anova")                                        return(d$df_3gr)
-    if (input$drop %in% c("modalwert", "mean", "median", "spannweite", "sd", "var", "iqr", "scale",
+    if (input$drop == "rm_anova")                                           return(d$df_rm_t)
+    if (input$drop %in% c("modalwert", "mean", "median", "spannweite", "sd", "var", "iqr", "boxplot", "scale",
                            "zdist", "confint_mean_with_var",
                            "confint_mean_no_var", "t.test1", "t.test1_2"))  return(d$df)
     if (input$drop == "fdr") {
@@ -680,7 +734,7 @@ server <- function(input, output, session) {
       m[, 1] <- as.character(m[, 1])
       return(m)
     }
-    if (input$drop %in% c("t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "lm_sig", "lm_sig2")) {
+    if (input$drop %in% c("t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "lm_sig", "lm_sig2", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2")) {
       t_quantiles <- c(0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90,
                        0.95, 0.975, 0.990, 0.995, 0.9995)
       df_tbl <- data.frame(df = c(1:30, 40, 60, 120))
@@ -698,7 +752,7 @@ server <- function(input, output, session) {
       }
       return(df_tbl)
     }
-    if (input$drop == "oneway_anova") {
+    if (input$drop %in% c("oneway_anova", "rm_anova")) {
       f_quantiles <- c(0.75, 0.90, 0.95, 0.99)
       flaeche_col <- "Fl\u00e4che"
       d_tbl <- data.frame(df2 = rep(1:12, each = 4), Flaeche = rep(f_quantiles, 12))
@@ -771,6 +825,28 @@ server <- function(input, output, session) {
         }
         paste("L\u00f6sung: $$ IQR =", q3 - q1, "$$")
       },
+      "boxplot" = {
+        xs <- sort(x)
+        md <- if (n %% 2 == 0) (xs[n/2] + xs[n/2+1]) / 2 else xs[(n+1)/2]
+        if ((n * 0.25) %% 1 == 0) {
+          q1 <- (xs[n * 0.25] + xs[n * 0.25 + 1]) / 2
+          q3 <- (xs[n * 0.75] + xs[n * 0.75 + 1]) / 2
+        } else {
+          q1 <- xs[ceiling(n * 0.25)]
+          q3 <- xs[ceiling(n * 0.75)]
+        }
+        iqr_val  <- q3 - q1
+        w_low    <- min(xs[xs >= q1 - 1.5 * iqr_val])
+        w_high   <- max(xs[xs <= q3 + 1.5 * iqr_val])
+        outliers <- xs[xs < q1 - 1.5 * iqr_val | xs > q3 + 1.5 * iqr_val]
+        out_str  <- if (length(outliers) > 0) paste0(", \\text{ Ausrei\u00dfer: } ", paste(outliers, collapse = ", ")) else ""
+        paste0("L\u00f6sung: $$ \\tilde{x}_{0.50} = ", md,
+               ", \\quad \\tilde{x}_{0.25} = ", q1,
+               ", \\quad \\tilde{x}_{0.75} = ", q3, " $$",
+               "$$ IQR = ", iqr_val,
+               ", \\quad W_{unten} = ", w_low,
+               ", \\quad W_{oben} = ", w_high, out_str, " $$")
+      },
       "scale"        = paste("L\u00f6sung: $$ z_i=", paste(as.character(round(scale(x), 2)), collapse = "; "), "$$"),
       "zdist" = {
         pos   <- d$zdist_pos
@@ -795,6 +871,50 @@ server <- function(input, output, session) {
       "cor_spearman" = {
         r_val <- 1 - round(6 * sum((x_rank - y_rank)^2) / (n * (n^2 - 1)), 2)
         paste0("L\u00f6sung: $$ r_s=", r_val, " $$", interpret_cor(r_val))
+      },
+      "cor_sig" = {
+        r_val  <- round(cor(x, y), 2)
+        df_val <- n - 2
+        t_emp  <- round(r_val * sqrt(df_val) / sqrt(1 - r_val^2), 2)
+        t_krit <- round(qt(0.975, df_val), 3)
+        decision <- if (abs(t_emp) > t_krit)
+          paste0("Da \\(|t_{emp}| = ", abs(t_emp), " > t_{krit} = ", t_krit, "\\), wird die \\(H_0\\) verworfen.")
+        else
+          paste0("Da \\(|t_{emp}| = ", abs(t_emp), " \\leq t_{krit} = ", t_krit, "\\), wird die \\(H_0\\) beibehalten.")
+        paste0("L\u00f6sung: $$ t_{emp} = ", t_emp, ", \\quad df = ", df_val, " $$<br>", decision)
+      },
+      "cor_sig2" = {
+        r_val  <- round(cor(x, y), 2)
+        df_val <- n - 2
+        t_emp  <- round(r_val * sqrt(df_val) / sqrt(1 - r_val^2), 2)
+        t_krit <- round(qt(0.95, df_val), 3)
+        decision <- if (t_emp > t_krit)
+          paste0("Da \\(t_{emp} = ", t_emp, " > t_{krit} = ", t_krit, "\\), wird die \\(H_0\\) verworfen.")
+        else
+          paste0("Da \\(t_{emp} = ", t_emp, " \\leq t_{krit} = ", t_krit, "\\), wird die \\(H_0\\) beibehalten.")
+        paste0("L\u00f6sung: $$ t_{emp} = ", t_emp, ", \\quad df = ", df_val, " $$<br>", decision)
+      },
+      "cor_sig_s" = {
+        rs_val <- round(1 - 6 * sum((x_rank - y_rank)^2) / (n * (n^2 - 1)), 2)
+        df_val <- n - 2
+        t_emp  <- round(rs_val * sqrt(df_val) / sqrt(1 - rs_val^2), 2)
+        t_krit <- round(qt(0.975, df_val), 3)
+        decision <- if (abs(t_emp) > t_krit)
+          paste0("Da \\(|t_{emp}| = ", abs(t_emp), " > t_{krit} = ", t_krit, "\\), wird die \\(H_0\\) verworfen.")
+        else
+          paste0("Da \\(|t_{emp}| = ", abs(t_emp), " \\leq t_{krit} = ", t_krit, "\\), wird die \\(H_0\\) beibehalten.")
+        paste0("L\u00f6sung: $$ t_{emp} = ", t_emp, ", \\quad df = ", df_val, " $$<br>", decision)
+      },
+      "cor_sig_s2" = {
+        rs_val <- round(1 - 6 * sum((x_rank - y_rank)^2) / (n * (n^2 - 1)), 2)
+        df_val <- n - 2
+        t_emp  <- round(rs_val * sqrt(df_val) / sqrt(1 - rs_val^2), 2)
+        t_krit <- round(qt(0.95, df_val), 3)
+        decision <- if (t_emp > t_krit)
+          paste0("Da \\(t_{emp} = ", t_emp, " > t_{krit} = ", t_krit, "\\), wird die \\(H_0\\) verworfen.")
+        else
+          paste0("Da \\(t_{emp} = ", t_emp, " \\leq t_{krit} = ", t_krit, "\\), wird die \\(H_0\\) beibehalten.")
+        paste0("L\u00f6sung: $$ t_{emp} = ", t_emp, ", \\quad df = ", df_val, " $$<br>", decision)
       },
       "alpha_kumulierung" = {
         k <- d$k_alpha
@@ -1006,6 +1126,31 @@ server <- function(input, output, session) {
         d_val <- round(effsize::cohen.d(x_g1, x_g2)$estimate, 2)
         paste0("L\u00f6sung: $$ d=", d_val, " $$", interpret_cohend(d_val))
       },
+      "rm_anova" = {
+        rm   <- d$df_rm; n_s <- d$n_rm; k <- 3
+        t0 <- rm$t0; t1 <- rm$t1; t2 <- rm$t2
+        gm   <- round(mean(c(t0, t1, t2)), 2)
+        mt0  <- round(mean(t0), 2); mt1 <- round(mean(t1), 2); mt2 <- round(mean(t2), 2)
+        person_means <- round(rowMeans(rm[, c("t0","t1","t2")]), 2)
+        var_sys    <- round(n_s * ((mt0-gm)^2 + (mt1-gm)^2 + (mt2-gm)^2) / (k-1), 3)
+        time_idx   <- rep(1:k, each = n_s)
+        pers_idx   <- rep(1:n_s, k)
+        ai_vals    <- c(mt0, mt1, mt2)[time_idx]
+        pm_vals    <- person_means[pers_idx]
+        qs_resid   <- round(sum((c(t0,t1,t2) - (ai_vals + pm_vals - gm))^2), 3)
+        df_time    <- k - 1
+        df_error   <- (k - 1) * (n_s - 1)
+        var_res    <- round(qs_resid / df_error, 3)
+        f_emp      <- round(var_sys / var_res, 2)
+        f_crit     <- round(qf(0.95, df_time, df_error), 2)
+        decision <- if (f_emp > f_crit)
+          paste0("Da \\(F_{emp} = ", f_emp, " > F_{krit} = ", f_crit, "\\), wird die \\(H_0\\) verworfen. ",
+                 "Es besteht ein signifikanter Unterschied zwischen den Messzeitpunkten.")
+        else
+          paste0("Da \\(F_{emp} = ", f_emp, " \\leq F_{krit} = ", f_crit, "\\), wird die \\(H_0\\) beibehalten. ",
+                 "Es besteht kein signifikanter Unterschied zwischen den Messzeitpunkten.")
+        paste0("L\u00f6sung: $$ F_{emp} = ", f_emp, ", \\quad F_{krit} = ", f_crit, " $$<br>", decision)
+      },
       "oneway_anova" = {
         all_3   <- c(d$x_3g1, d$x_3g2, d$x_3g3)
         n_per   <- length(d$x_3g1)
@@ -1084,7 +1229,7 @@ server <- function(input, output, session) {
       "iqr" = {
         xs <- sort(x)
         if ((n * 0.25) %% 1 == 0) {
-          paste("L\u00f6sungweg: $$x_{sortiert}=", paste(xs, collapse = ";"), "$$",
+          paste("L\u00f6sungsweg: $$x_{sortiert}=", paste(xs, collapse = ";"), "$$",
                 "$$ \\text{Unteres Quartil }", "(\\alpha=0.25)", ": $$",
                 "\n", "$$ n \\cdot \\alpha =", n, "\\cdot", 0.25, "=", n * 0.25, "$$",
                 "$$ \\rightarrow n \\cdot \\alpha  \\text{ ist eine ganze Zahl. $$", "\n",
@@ -1110,6 +1255,45 @@ server <- function(input, output, session) {
                 "$$  \\tilde{x}_{0.75} = x_{(", ceiling(n * 0.75), ")} = ", xs[ceiling(n * 0.75)], "  $$", "\n",
                 "$$ IQR = \\tilde{x}_{0.75} - \\tilde{x}_{0.25} = ", xs[ceiling(n * 0.75)], "-", xs[ceiling(n * 0.25)], "=", xs[ceiling(n * 0.75)] - xs[ceiling(n * 0.25)], "$$")
         }
+      },
+
+      "boxplot" = {
+        xs <- sort(x)
+        # Median
+        md <- if (n %% 2 == 0) (xs[n/2] + xs[n/2+1]) / 2 else xs[(n+1)/2]
+        md_step <- if (n %% 2 == 0)
+          paste0("$$ \\tilde{x}_{0.50} = \\frac{x_{(", n/2, ")}+x_{(", n/2+1, ")}}{2} = \\frac{", xs[n/2], "+", xs[n/2+1], "}{2} = ", md, " $$")
+        else
+          paste0("$$ \\tilde{x}_{0.50} = x_{(", (n+1)/2, ")} = ", md, " $$")
+        # Quartile
+        if ((n * 0.25) %% 1 == 0) {
+          q1 <- (xs[n*0.25] + xs[n*0.25+1]) / 2
+          q3 <- (xs[n*0.75] + xs[n*0.75+1]) / 2
+          q1_step <- paste0("$$ \\tilde{x}_{0.25} = \\frac{x_{(", n*0.25, ")}+x_{(", n*0.25+1, ")}}{2} = \\frac{", xs[n*0.25], "+", xs[n*0.25+1], "}{2} = ", q1, " $$")
+          q3_step <- paste0("$$ \\tilde{x}_{0.75} = \\frac{x_{(", n*0.75, ")}+x_{(", n*0.75+1, ")}}{2} = \\frac{", xs[n*0.75], "+", xs[n*0.75+1], "}{2} = ", q3, " $$")
+        } else {
+          q1 <- xs[ceiling(n*0.25)]
+          q3 <- xs[ceiling(n*0.75)]
+          q1_step <- paste0("$$ \\tilde{x}_{0.25} = x_{(", ceiling(n*0.25), ")} = ", q1, " $$")
+          q3_step <- paste0("$$ \\tilde{x}_{0.75} = x_{(", ceiling(n*0.75), ")} = ", q3, " $$")
+        }
+        iqr_val  <- q3 - q1
+        fl       <- q1 - 1.5 * iqr_val
+        fh       <- q3 + 1.5 * iqr_val
+        w_low    <- min(xs[xs >= fl])
+        w_high   <- max(xs[xs <= fh])
+        outliers <- xs[xs < fl | xs > fh]
+        out_str  <- if (length(outliers) > 0) paste0("$$ \\text{Ausrei\u00dfer: } ", paste(outliers, collapse = ", "), " $$") else ""
+        paste0("L\u00f6sungsweg: $$x_{sortiert}=", paste(xs, collapse = ";"), "$$",
+               "\n", md_step,
+               "\n$$ \\text{Unteres Quartil:} $$\n", q1_step,
+               "\n$$ \\text{Oberes Quartil:} $$\n", q3_step,
+               "\n$$ IQR = ", q3, " - ", q1, " = ", iqr_val, " $$",
+               "\n$$ \\text{Untere Whiskergrenze: } \\tilde{x}_{0.25} - 1.5 \\cdot IQR = ", q1, " - ", 1.5*iqr_val, " = ", fl, " $$",
+               "\n$$ W_{unten} = ", w_low, " \\text{ (kleinster Wert } \\geq ", fl, ") $$",
+               "\n$$ \\text{Obere Whiskergrenze: } \\tilde{x}_{0.75} + 1.5 \\cdot IQR = ", q3, " + ", 1.5*iqr_val, " = ", fh, " $$",
+               "\n$$ W_{oben} = ", w_high, " \\text{ (gr\u00f6\u00dfter Wert } \\leq ", fh, ") $$",
+               if (nchar(out_str) > 0) paste0("\n", out_str) else "")
       },
 
       "scale" = paste("L\u00f6sungsweg:", latex_mean_steps(x, n), "\n", latex_var_steps(x, n), "\n",
@@ -1209,6 +1393,38 @@ server <- function(input, output, session) {
         "\n",
         "$$ r_s=1-", round(6 * sum((x_rank - y_rank)^2) / (n * (n^2 - 1)), 2), " $$"
       ),
+
+      "cor_sig" = ,
+      "cor_sig2" = {
+        two_sided <- input$drop == "cor_sig"
+        r_val  <- round(cor(x, y), 2)
+        df_val <- n - 2
+        t_emp  <- round(r_val * sqrt(df_val) / sqrt(1 - r_val^2), 2)
+        t_krit <- round(qt(if (two_sided) 0.975 else 0.95, df_val), 3)
+        paste0("L\u00f6sungsweg: ",
+               "$$ t_{emp} = \\frac{r \\cdot \\sqrt{N-2}}{\\sqrt{1-r^2}} = ",
+               "\\frac{", r_val, " \\cdot \\sqrt{", df_val, "}}{\\sqrt{1-", r_val, "^2}} = ",
+               "\\frac{", round(r_val * sqrt(df_val), 3), "}{\\sqrt{", round(1 - r_val^2, 3), "}} = ",
+               "\\frac{", round(r_val * sqrt(df_val), 3), "}{", round(sqrt(1 - r_val^2), 3), "} = ", t_emp, " $$",
+               "$$ df = N - 2 = ", df_val, " $$",
+               "$$ t_{krit(df=", df_val, ", \\alpha=.05)} = ", t_krit, " $$")
+      },
+
+      "cor_sig_s" = ,
+      "cor_sig_s2" = {
+        two_sided <- input$drop == "cor_sig_s"
+        rs_val <- round(1 - 6 * sum((x_rank - y_rank)^2) / (n * (n^2 - 1)), 2)
+        df_val <- n - 2
+        t_emp  <- round(rs_val * sqrt(df_val) / sqrt(1 - rs_val^2), 2)
+        t_krit <- round(qt(if (two_sided) 0.975 else 0.95, df_val), 3)
+        paste0("L\u00f6sungsweg: ",
+               "$$ t_{emp} = \\frac{r_s \\cdot \\sqrt{N-2}}{\\sqrt{1-r_s^2}} = ",
+               "\\frac{", rs_val, " \\cdot \\sqrt{", df_val, "}}{\\sqrt{1-", rs_val, "^2}} = ",
+               "\\frac{", round(rs_val * sqrt(df_val), 3), "}{\\sqrt{", round(1 - rs_val^2, 3), "}} = ",
+               "\\frac{", round(rs_val * sqrt(df_val), 3), "}{", round(sqrt(1 - rs_val^2), 3), "} = ", t_emp, " $$",
+               "$$ df = N - 2 = ", df_val, " $$",
+               "$$ t_{krit(df=", df_val, ", \\alpha=.05)} = ", t_krit, " $$")
+      },
 
       "chi2_gleich" = {
         obs <- d$obs_chi2_gleich; k <- d$k_chi2_gleich; n <- sum(obs)
@@ -1464,6 +1680,49 @@ server <- function(input, output, session) {
         "$$ d=\\frac{", round(mean(x_g1) - mean(x_g2), 2), "}{\\sqrt{\\frac{", round(var(x_g1) + var(x_g2), 2), "}{", 2, "}}}", "$$"
       ),
 
+      "rm_anova" = {
+        rm <- d$df_rm; n_s <- d$n_rm; k <- 3
+        t0 <- rm$t0; t1 <- rm$t1; t2 <- rm$t2
+        gm   <- round(mean(c(t0, t1, t2)), 2)
+        mt0  <- round(mean(t0), 2); mt1 <- round(mean(t1), 2); mt2 <- round(mean(t2), 2)
+        person_means <- round(rowMeans(rm[, c("t0","t1","t2")]), 2)
+        var_sys    <- round(n_s * ((mt0-gm)^2 + (mt1-gm)^2 + (mt2-gm)^2) / (k-1), 3)
+        time_idx   <- rep(1:k, each = n_s)
+        pers_idx   <- rep(1:n_s, k)
+        ai_vals    <- c(mt0, mt1, mt2)[time_idx]
+        pm_vals    <- person_means[pers_idx]
+        qs_resid   <- round(sum((c(t0,t1,t2) - (ai_vals + pm_vals - gm))^2), 3)
+        df_time    <- k - 1; df_error <- (k - 1) * (n_s - 1)
+        var_res    <- round(qs_resid / df_error, 3)
+        f_emp      <- round(var_sys / var_res, 2)
+        f_crit     <- round(qf(0.95, df_time, df_error), 2)
+        paste(
+          "L\u00f6sungsweg:",
+          "$$\\bar{x}_{t_0}=\\frac{", paste(t0, collapse = "+"), "}{", n_s, "}=", mt0, "$$",
+          "\n",
+          "$$\\bar{x}_{t_1}=\\frac{", paste(t1, collapse = "+"), "}{", n_s, "}=", mt1, "$$",
+          "\n",
+          "$$\\bar{x}_{t_2}=\\frac{", paste(t2, collapse = "+"), "}{", n_s, "}=", mt2, "$$",
+          "\n",
+          "$$\\bar{G}=\\frac{", paste(c(t0, t1, t2), collapse = "+"), "}{", n_s * k, "}=", gm, "$$",
+          "\n",
+          "$$\\bar{P}_m=",
+          paste(paste0("\\frac{", t0, "+", t1, "+", t2, "}{3}=", person_means), collapse = ";\\quad "), "$$",
+          "\n",
+          "$$\\hat{\\sigma}_A^2 = \\frac{n \\cdot \\sum_i(\\bar{A}_i - \\bar{G})^2}{p-1} =",
+          "\\frac{", n_s, " \\cdot (", round((mt0-gm)^2,3), "+", round((mt1-gm)^2,3), "+", round((mt2-gm)^2,3), ")}{2}=", var_sys, "$$",
+          "\n",
+          "$$\\hat{\\sigma}_{A \\times Vpn}^2 = \\frac{\\sum_i \\sum_m [x_{im}-(\\bar{A}_i+\\bar{P}_m-\\bar{G})]^2}{(p-1)(n-1)} =",
+          "\\frac{", qs_resid, "}{2 \\cdot", n_s-1, "}=\\frac{", qs_resid, "}{", df_error, "}=", var_res, "$$",
+          "\n",
+          "$$df_A=p-1=2, \\quad df_{A \\times Vpn}=(p-1)(n-1)=2 \\cdot", n_s-1, "=", df_error, "$$",
+          "\n",
+          "$$F_{emp}=\\frac{\\hat{\\sigma}_A^2}{\\hat{\\sigma}_{A \\times Vpn}^2}=\\frac{", var_sys, "}{", var_res, "}=", f_emp, "$$",
+          "\n",
+          "$$F_{krit(df_1=2,\\, df_2=", df_error, ",\\, \\alpha=.05)}=", f_crit, "$$"
+        )
+      },
+
       "oneway_anova" = {
         all_3      <- c(x_3g1, x_3g2, x_3g3)
         n_per      <- length(x_3g1)
@@ -1596,6 +1855,36 @@ server <- function(input, output, session) {
           theme_classic(base_size = 14)
       },
 
+      "boxplot" = {
+        xs <- sort(x)
+        md <- if (n %% 2 == 0) (xs[n/2] + xs[n/2+1]) / 2 else xs[(n+1)/2]
+        if ((n * 0.25) %% 1 == 0) {
+          q1 <- (xs[n*0.25] + xs[n*0.25+1]) / 2
+          q3 <- (xs[n*0.75] + xs[n*0.75+1]) / 2
+        } else {
+          q1 <- xs[ceiling(n*0.25)]
+          q3 <- xs[ceiling(n*0.75)]
+        }
+        iqr_val  <- q3 - q1
+        w_low    <- min(xs[xs >= q1 - 1.5 * iqr_val])
+        w_high   <- max(xs[xs <= q3 + 1.5 * iqr_val])
+        outliers <- xs[xs < q1 - 1.5 * iqr_val | xs > q3 + 1.5 * iqr_val]
+        bp_df <- data.frame(grp = "X", ymin = w_low, lower = q1,
+                            middle = md, upper = q3, ymax = w_high)
+        p <- ggplot(bp_df, aes(x = grp, ymin = ymin, lower = lower,
+                               middle = middle, upper = upper, ymax = ymax)) +
+          geom_boxplot(stat = "identity", width = 0.4, fill = "white", colour = "black") +
+          labs(x = "", y = "X") +
+          theme_classic(base_size = 14) +
+          theme(text = element_text(color = "black"))
+        if (length(outliers) > 0) {
+          p <- p + geom_point(data = data.frame(grp = "X", y = outliers),
+                              aes(x = grp, y = y), inherit.aes = FALSE,
+                              shape = 1, size = 3, colour = "black")
+        }
+        p
+      },
+
       "cov" = ,
       "cor_pearson" = ggplot(data = d$df_2_plot, aes(x = X, y = Y)) +
         geom_point() +
@@ -1604,6 +1893,57 @@ server <- function(input, output, session) {
         scale_y_continuous(limits = c(0, max(y) * 1.1), expand = c(0, 0)) +
         labs(x = "X", y = "Y") +
         theme_classic(base_size = 14),
+
+      "cor_sig" = ,
+      "cor_sig2" = ,
+      "cor_sig_s" = ,
+      "cor_sig_s2" = {
+        two_sided <- input$drop %in% c("cor_sig", "cor_sig_s")
+        r_val <- if (input$drop %in% c("cor_sig", "cor_sig2")) round(cor(x, y), 2) else {
+                   xr <- d$x_rank; yr <- d$y_rank
+                   round(1 - 6 * sum((xr - yr)^2) / (n * (n^2 - 1)), 2)
+                 }
+        df_val <- n - 2
+        t_emp  <- round(r_val * sqrt(df_val) / sqrt(1 - r_val^2), 2)
+        t_krit <- round(qt(if (two_sided) 0.975 else 0.95, df_val), 3)
+        x_lim  <- max(4.5, abs(t_emp) + 2)
+
+        scatter_plot <- ggplot(data = d$df_2_plot, aes(x = X, y = Y)) +
+          geom_point() +
+          geom_smooth(method = "lm", se = FALSE, colour = "black", fullrange = TRUE) +
+          scale_x_continuous(limits = c(0, max(x) * 1.1), expand = c(0, 0)) +
+          scale_y_continuous(limits = c(0, max(y) * 1.1), expand = c(0, 0)) +
+          labs(x = "X", y = "Y") +
+          theme_classic(base_size = 14)
+
+        t_plot <- ggplot(data.frame(t = c(-x_lim, x_lim)), aes(x = t))
+        if (two_sided) {
+          t_plot <- t_plot +
+            stat_function(fun = dt, args = list(df = df_val), geom = "area",
+                          xlim = c(-x_lim, -t_krit), fill = "#e8e8e8") +
+            stat_function(fun = dt, args = list(df = df_val), geom = "area",
+                          xlim = c(t_krit, x_lim), fill = "#e8e8e8")
+        } else {
+          t_plot <- t_plot +
+            stat_function(fun = dt, args = list(df = df_val), geom = "area",
+                          xlim = c(t_krit, x_lim), fill = "#e8e8e8")
+        }
+        x_breaks <- if (two_sided) c(-t_krit, 0, t_krit) else c(0, t_krit)
+        t_plot <- t_plot +
+          stat_function(fun = dt, args = list(df = df_val), colour = "black") +
+          geom_segment(aes(x = t_emp, xend = t_emp, y = 0, yend = dt(t_emp, df_val)),
+                       linetype = "dashed", color = "black") +
+          scale_x_continuous(breaks = x_breaks) +
+          scale_y_continuous(breaks = NULL) +
+          labs(x = "t", y = "") +
+          ggtitle(parse(text = paste0("'t-Verteilung (df = ", df_val, "),  ' * t[emp] * ' = ", t_emp, "'"))) +
+          theme_classic(base_size = 14) +
+          theme(text = element_text(color = "black"),
+                axis.text.x = element_text(color = "black", size = 9),
+                plot.title = element_text(size = 11))
+
+        cowplot::plot_grid(scatter_plot, t_plot, ncol = 2)
+      },
 
       "lm" = {
         a_val <- round(mean(y) - (cov(x, y) / var(x)) * mean(x), 2)
@@ -1902,6 +2242,73 @@ server <- function(input, output, session) {
         cowplot::plot_grid(bar_plot, t_plot, ncol = 2)
       },
 
+      "rm_anova" = {
+        rm <- d$df_rm; n_s <- d$n_rm; k <- 3
+        t0 <- rm$t0; t1 <- rm$t1; t2 <- rm$t2
+        mt0 <- round(mean(t0), 2); mt1 <- round(mean(t1), 2); mt2 <- round(mean(t2), 2)
+        gm  <- round(mean(c(t0, t1, t2)), 2)
+        person_means <- round(rowMeans(rm[, c("t0","t1","t2")]), 2)
+        ss_time  <- round(n_s * ((mt0-gm)^2 + (mt1-gm)^2 + (mt2-gm)^2), 3)
+        ss_pers  <- round(k * sum((person_means - gm)^2), 3)
+        ss_tot   <- round(sum((c(t0,t1,t2) - gm)^2), 3)
+        ss_err   <- round(ss_tot - ss_time - ss_pers, 3)
+        df_time  <- k - 1; df_err <- (k-1)*(n_s-1)
+        f_emp    <- round((ss_time/df_time) / (ss_err/df_err), 2)
+        f_crit   <- round(qf(0.95, df_time, df_err), 2)
+        x_lim    <- max(8, f_emp + 2)
+
+        long_df <- rbind(
+          data.frame(ID = factor(rm$ID), Zeit = "t0", X = t0),
+          data.frame(ID = factor(rm$ID), Zeit = "t1", X = t1),
+          data.frame(ID = factor(rm$ID), Zeit = "t2", X = t2)
+        )
+        long_df$Zeit <- factor(long_df$Zeit, levels = c("t0","t1","t2"))
+        mean_df <- data.frame(
+          Zeit = factor(c("t0","t1","t2"), levels = c("t0","t1","t2")),
+          X    = c(mt0, mt1, mt2)
+        )
+        y_max_rm <- max(long_df$X) * 1.1
+
+        line_plot <- ggplot(long_df, aes(x = Zeit, y = X, group = ID)) +
+          geom_line(colour = "gray70") +
+          geom_point(size = 2, colour = "gray70") +
+          geom_line(data = mean_df, aes(group = 1), colour = "black", linewidth = 1.2) +
+          geom_point(data = mean_df, aes(group = 1), colour = "black", size = 3) +
+          scale_x_discrete(labels = c("t0" = expression(t[0]),
+                                      "t1" = expression(t[1]),
+                                      "t2" = expression(t[2]))) +
+          scale_y_continuous(limits = c(0, y_max_rm), expand = c(0, 0)) +
+          labs(x = "", y = "X") +
+          theme_classic(base_size = 14) +
+          theme(text = element_text(color = "black"))
+
+        label_hjust_rm <- if (f_emp < x_lim * 0.7) -0.15 else 1.15
+        label_x_rm     <- f_emp + 0.2 * sign(f_emp - x_lim * 0.5 + 0.001)
+
+        f_plot <- ggplot(data.frame(f = c(0, x_lim)), aes(x = f)) +
+          stat_function(fun = df, args = list(df1 = df_time, df2 = df_err), geom = "area",
+                        xlim = c(f_crit, x_lim), fill = "#e8e8e8") +
+          stat_function(fun = df, args = list(df1 = df_time, df2 = df_err), colour = "black") +
+          geom_segment(aes(x = f_emp, xend = f_emp, y = 0,
+                           yend = df(f_emp, df_time, df_err)),
+                       linetype = "dashed", color = "black") +
+          annotate("text", x = label_x_rm,
+                   y = df(f_crit, df_time, df_err) * 1.8,
+                   label = paste0("F[emp]~'='~", f_emp),
+                   parse = TRUE, hjust = label_hjust_rm,
+                   size = 5, color = "black", fontface = "bold") +
+          coord_cartesian(clip = "off") +
+          scale_x_continuous(breaks = c(0, f_crit)) +
+          scale_y_continuous(breaks = NULL) +
+          labs(x = "F", y = "") +
+          ggtitle(paste0("F-Verteilung (df1 = ", df_time, ", df2 = ", df_err, "):")) +
+          theme_classic(base_size = 14) +
+          theme(text = element_text(color = "black"),
+                axis.text.x = element_text(color = "black", size = 9))
+
+        cowplot::plot_grid(line_plot, f_plot, ncol = 2)
+      },
+
       "oneway_anova" = {
         all_3      <- c(x_3g1, x_3g2, x_3g3)
         n_per      <- length(x_3g1)
@@ -2108,7 +2515,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$go, {
     output$solve_button <- renderUI({ actionButton("solve", "L\u00f6sung") })
-    if (input$drop %in% c("t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "zdist", "oneway_anova",
+    if (input$drop %in% c("t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "zdist", "oneway_anova", "rm_anova",
                           "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld", "lm_sig", "lm_sig2")) {
       output$table_button <- renderUI({ actionButton("tab", "Verteilungstabelle") })
     } else {
@@ -2163,8 +2570,8 @@ server <- function(input, output, session) {
   output$formel        <- renderUI({ withMathJax(helpText(HTML(sub("^Formel:", "<strong>Formel:</strong>", formel_reactive())))) })
   output$loesungsweg   <- renderUI({ withMathJax(helpText(HTML(sub("^L\u00f6sungs?weg:", "<strong>L\u00f6sungsweg:</strong>", loesungsweg_reactive())))) })
   output$loesung       <- renderUI({ withMathJax(helpText(HTML(sub("^L\u00f6sung:", "<strong>L\u00f6sung:</strong>", loesung_reactive())))) })
-  plots_with_label <- c("modalwert", "mean", "sd", "median", "spannweite", "cov", "cor_pearson", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2",
-                        "t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "cohend", "oneway_anova",
+  plots_with_label <- c("modalwert", "mean", "sd", "median", "spannweite", "boxplot", "cov", "cor_pearson", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2", "lm", "lm_predict", "lm_std", "lm_sig", "lm_sig2",
+                        "t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "cohend", "oneway_anova", "rm_anova",
                         "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld", "zdist", "scale")
   output$plot_label <- renderUI({
     req(input$solve)
@@ -2176,8 +2583,8 @@ server <- function(input, output, session) {
   })
 
   output$plot_container <- renderUI({
-    if (input$drop %in% c("t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "oneway_anova", "scale",
-                          "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld", "lm_sig", "lm_sig2")) {
+    if (input$drop %in% c("t.test1", "t.test1_2", "abh_t.test", "abh_t.test2", "t.test", "t.test2", "oneway_anova", "rm_anova", "scale",
+                          "chi2_gleich", "chi2_verh", "chi2_2d", "chi2_4feld", "lm_sig", "lm_sig2", "cor_sig", "cor_sig2", "cor_sig_s", "cor_sig_s2")) {
       plotOutput("plot", width = "580px", height = "280px")
     } else {
       plotOutput("plot", width = "300px", height = "300px")
